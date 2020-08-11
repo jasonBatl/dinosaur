@@ -98,6 +98,7 @@
 
     
     // Use IIFE to get human data from form
+    // On button click, prepare and display infographic
     (function() {
         $('#btn').on('click', function () {
             if ($('#feet' && '#weight' && '#name' && '#continent').val() !== '') {
@@ -113,9 +114,8 @@
                 compareWeight();
                 compareDiet();
                 compareLocation();
-                tiles();
-                
                 removeForm();
+                tiles();
             } else {
                 alert("Please fill out form completely");
             }
@@ -126,15 +126,11 @@
     // Create Dino Compare Method 1
     // NOTE: Weight in JSON file is in lbs, height in inches. 
     let compareWeight = function() {     
-        let dinoWeight = dinoMap.filter(function(item) {
-            return item.weight && item.species !== human.species;
+        let dinoOnly = dinoMap.filter(function(item) {
+            return item.species !== human.species;
         });
 
-        let dinoHeight = dinoMap.filter(function (item) {
-            return item.height && item.species !== human.species;
-        });
-        
-        dinoWeight.forEach(function(dino) {
+        dinoOnly.forEach(function(dino) {
             if (dino.weight > human.weight) {
                 dino.fact.push(dino.species + ' is heavier than you!');
                 dino.fact.push(dino.species + ' outweighs you by '  + (dino.weight - human.weight) + ' lbs!');
@@ -146,14 +142,14 @@
             }
         });
 
-        dinoHeight.forEach(function(dino) {
+        dinoOnly.forEach(function(dino) {
             if (dino.diet == 'carnivor' && (dino.height > human.height && dino.weight > human.weight)) {
                 dino.fact.push('You better run when you see a ' + dino.diet + ' like the ' + dino.species + '!');
             } else if (dino.height < human.height && dino.weight < human.weight) {
                 dino.fact.push(dino.species + 's can still be dangerous even if you outweigh them by ' + (human.weight - dino.weight) + '!');
                 dino.fact.push(dino.species + 's can still be dangerous even if you are taller by ' + (human.height - dino.height) + ' inches!');
             } else if (dino.diet = 'herbavor') {
-                dino.fact.push(dino.diet.toUpperCase() + 's can still be dangerous. Run!');
+                dino.fact.push(dino.diet + 's can still be dangerous. Run!');
             }
         });
     }
@@ -162,7 +158,7 @@
     // NOTE: Weight in JSON file is in lbs, height in inches.
     let compareDiet = function () {
         let dinoDiet = dinoMap.filter(function(item) {
-            return item.diet && item.species !== human.species;
+            return item.species !== human.species;
         });
 
         dinoDiet.forEach(function(dino) {
@@ -176,7 +172,7 @@
                         dino.fact.push(dino.species + 'probably only ate other marine dinosaurs and floating land/air dinosaurs.');
                         dino.fact.push('If Tyrannosaurus Rex could swim, he would have gone after ' + dino.species);
                     } else if (dino.species == 'Tyrannosaurus Rex'){
-                        dino.fact.push('The' + dino.species + 'ate whatever he wanted. Weight size did not matter.')
+                        dino.fact.push('The ' + dino.species + 'ate whatever he wanted. Weight size did not matter.')
                     } else {
                         dino.fact.push(data.species + 'where prey to ' + dino.species);
                     }
@@ -208,13 +204,12 @@
 
 
     // Generate Tiles for each Dino in Array
-    var tiles = function() {
+    let tiles = function() {
         let newTile = "";
         let randomFact = "";
-        dinoMap.forEach(function(dino) {
-             // Get random fact from array
-             
+        dinoMap.forEach(function(dino) {            
             if (dino.species != human.species){
+                // Get random fact from array
                 randomFact = dino.fact[Math.floor(Math.random()*dino.fact.length)];
             }
             if (human.species != dino.species && dino.species.toLowerCase() !== 'pigeon') {
@@ -246,10 +241,6 @@
             // Add tiles to DOM
             $('#grid').append(newTile);
         });
-
-
-        
-        
     }
       
     // Remove form from screen
@@ -258,4 +249,4 @@
     } 
 
 
-// On button click, prepare and display infographic
+
