@@ -13,7 +13,7 @@
    
 
     // Create Dino Objects
-    let dinoInfo = [
+    const dinoInfo = [
         {
             "species": "Triceratops",
             "weight": 13000,
@@ -100,14 +100,25 @@
     // Use IIFE to get human data from form
     // On button click, prepare and display infographic
     (function() {
-        $('#btn').on('click', function () {
-            if ($('#feet' && '#weight' && '#name' && '#continent').val() !== '') {
+        const form = document.getElementById('dino-compare');
+        const inputs = form.getElementsByTagName('input');
+        document.getElementById('btn').addEventListener('click', function () {
+            for (i = 0; i < inputs.length; i++) {
+                if (inputs[i].value === '') {
+                    alert("Please fill out form compconstely");
+                    return false;
+                } 
+            };
+            
+            return submitForm();
+                        
+            function submitForm() {
                 //convert feet to inches
-                human.height = parseInt($('#feet').val()) * 12 + parseInt($('#inches').val());
-                human.weight = parseInt($('#weight').val());
-                human.diet = $('#diet').val().toLowerCase();
-                human.where = $('#continent').val();
-                human.species = $('#name').val();
+                human.height = parseInt(document.getElementById('feet').value) * 12 + parseInt(document.getElementById('inches').value);
+                human.weight = parseInt(document.getElementById('weight').value);
+                human.diet = document.getElementById('diet').value.toLowerCase();
+                human.where = document.getElementById('continent').value;
+                human.species = document.getElementById('name').value;
                 //push human object to the middle of array
                 dinoMap.splice(4, 0, human);
                 
@@ -116,8 +127,6 @@
                 compareLocation();
                 removeForm();
                 tiles();
-            } else {
-                alert("Please fill out form completely");
             }
         })
     })();
@@ -125,8 +134,8 @@
 
     // Create Dino Compare Method 1
     // NOTE: Weight in JSON file is in lbs, height in inches. 
-    let compareWeight = function() {     
-        let dinoOnly = dinoMap.filter(function(item) {
+    const compareWeight = function() {     
+        const dinoOnly = dinoMap.filter(function(item) {
             return item.species !== human.species;
         });
 
@@ -156,15 +165,15 @@
 
     // Create Dino Compare Method 2
     // NOTE: Weight in JSON file is in lbs, height in inches.
-    let compareDiet = function () {
-        let dinoDiet = dinoMap.filter(function(item) {
+    const compareDiet = function () {
+        const dinoDiet = dinoMap.filter(function(item) {
             return item.species !== human.species;
         });
 
         dinoDiet.forEach(function(dino) {
             if (dino.diet == 'carnivor'){
                 dino.fact.push(dino.species + ' probably ate other dinosaurs in the ' + dino.when + ' era.');
-                let smallerDino = dinoMap.filter(function(item) {
+                const smallerDino = dinoMap.filter(function(item) {
                     return item.weight < dino.weight && item.when == dino.when;
                 });
                 smallerDino.forEach(function(data) {
@@ -190,8 +199,8 @@
     
     // Create Dino Compare Method 3
     // NOTE: Weight in JSON file is in lbs, height in inches.
-    let compareLocation = function () {
-        let dinoLocation = dinoMap.filter(function(item) {
+    const compareLocation = function () {
+        const dinoLocation = dinoMap.filter(function(item) {
             return (item.where === human.where || item.where.includes(human.where)) && item.species !== human.species;
         });
 
@@ -204,7 +213,7 @@
 
 
     // Generate Tiles for each Dino in Array
-    let tiles = function() {
+    const tiles = function() {
         let newTile = "";
         let randomFact = "";
         dinoMap.forEach(function(dino) {            
