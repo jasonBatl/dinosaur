@@ -105,7 +105,7 @@
         document.getElementById('btn').addEventListener('click', function () {
             for (i = 0; i < inputs.length; i++) {
                 if (inputs[i].value === '') {
-                    alert("Please fill out form compconstely");
+                    alert("Please fill out form completely");
                     return false;
                 } 
             };
