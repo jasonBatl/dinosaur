@@ -88,7 +88,7 @@
         }
     ] 
     //
-    let dinoMap = dinoInfo.map(function(item){
+    const dinoMap = dinoInfo.map(function(item){
         return new Dino(item.species, item.weight, item.height, item.where, item.diet, item.when, [item.fact]);
     });
 
@@ -141,24 +141,24 @@
 
         dinoOnly.forEach(function(dino) {
             if (dino.weight > human.weight) {
-                dino.fact.push(dino.species + ' is heavier than you!');
-                dino.fact.push(dino.species + ' outweighs you by '  + (dino.weight - human.weight) + ' lbs!');
+                dino.fact.push(`${dino.species} is heavier than you!`);
+                dino.fact.push(`${dino.species} outweighs you by ${dino.weight - human.weight} lbs!`);
             } else if (dino.weight === human.weight) {
-                dino.fact.push('You are the same weight as a ' + dino.species);
+                dino.fact.push(`You are the same weight as a ${dino.species}`);
             } else {
-                dino.fact.push(dino.species + ' is lighter than you!');
-                dino.fact.push('You outweigh a ' + dino.species + ' by ' + (human.weight - dino.weight) + ' lbs!');
+                dino.fact.push(`${dino.species} is lighter than you!`);
+                dino.fact.push(`You outweigh a ${dino.species} by ${human.weight - dino.weight} lbs!`);
             }
         });
 
         dinoOnly.forEach(function(dino) {
             if (dino.diet == 'carnivor' && (dino.height > human.height && dino.weight > human.weight)) {
-                dino.fact.push('You better run when you see a ' + dino.diet + ' like the ' + dino.species + '!');
+                dino.fact.push(`You better run when you see a ${dino.diet} like the ${dino.species}!`);
             } else if (dino.height < human.height && dino.weight < human.weight) {
-                dino.fact.push(dino.species + 's can still be dangerous even if you outweigh them by ' + (human.weight - dino.weight) + '!');
-                dino.fact.push(dino.species + 's can still be dangerous even if you are taller by ' + (human.height - dino.height) + ' inches!');
+                dino.fact.push(`${dino.species}\'s can still be dangerous even if you outweigh them by ${human.weight - dino.weight})!`);
+                dino.fact.push(`${dino.species}\'s can still be dangerous even if you are taller by ${human.height - dino.height} inches!`);
             } else if (dino.diet = 'herbavor') {
-                dino.fact.push(dino.diet + 's can still be dangerous. Run!');
+                dino.fact.push(`${dino.diet}\'s can still be dangerous. Run!`);
             }
         });
     }
@@ -172,24 +172,24 @@
 
         dinoDiet.forEach(function(dino) {
             if (dino.diet == 'carnivor'){
-                dino.fact.push(dino.species + ' probably ate other dinosaurs in the ' + dino.when + ' era.');
+                dino.fact.push(`${dino.species} probably ate other dinosaurs in the ${dino.when} era.`);
                 const smallerDino = dinoMap.filter(function(item) {
                     return item.weight < dino.weight && item.when == dino.when;
                 });
                 smallerDino.forEach(function(data) {
                     if (dino.species == 'Elasmosaurus') {
-                        dino.fact.push(dino.species + 'probably only ate other marine dinosaurs and floating land/air dinosaurs.');
-                        dino.fact.push('If Tyrannosaurus Rex could swim, he would have gone after ' + dino.species);
+                        dino.fact.push(`${dino.species} probably only ate other marine dinosaurs and floating land/air dinosaurs.`);
+                        dino.fact.push(`If Tyrannosaurus Rex could swim, he would have gone after ${dino.species}`);
                     } else if (dino.species == 'Tyrannosaurus Rex'){
-                        dino.fact.push('The ' + dino.species + 'ate whatever he wanted. Weight size did not matter.')
+                        dino.fact.push(`The ${dino.species} ate whatever he wanted. Weight size did not matter.`);
                     } else {
-                        dino.fact.push(data.species + 'where prey to ' + dino.species);
+                        dino.fact.push(`${data.species} where prey to ${dino.species}`);
                     }
                     
                 });
-                dino.fact.push(dino.species + ' eats meat like you!');
+                dino.fact.push(`${dino.species} eats meat like you!`);
             } else if(dino.diet == 'herbavor' && dino.weight > 1000) {
-                dino.fact.push('The ' + dino.species + ' would have to eat a lot of plants!');
+                dino.fact.push(`The ${dino.species} would have to eat a lot of plants!`);
 
             }
             
@@ -205,7 +205,7 @@
         });
 
         dinoLocation.forEach(function(dino) {
-            dino.fact.push(dino.species + ' once lived where you live now in the ' + dino.when + ' era!');
+            dino.fact.push(`${dino.species} once lived where you live now in the ${dino.when} era!`);
         });
     }
 
@@ -214,47 +214,43 @@
 
     // Generate Tiles for each Dino in Array
     const tiles = function() {
-        let newTile = "";
-        let randomFact = "";
-        dinoMap.forEach(function(dino) {            
+        let randomFact = '';
+        dinoMap.forEach(function(dino) {  
+            let newTile = document.createElement('div'); 
+            newTile.setAttribute('id', `${dino.species}`); 
+            newTile.setAttribute('class', 'grid-item');    
+
             if (dino.species != human.species){
                 // Get random fact from array
                 randomFact = dino.fact[Math.floor(Math.random()*dino.fact.length)];
             }
             if (human.species != dino.species && dino.species.toLowerCase() !== 'pigeon') {
-                newTile = `
-                    <div id="${dino.species}" class="grid-item">
-                        <h2>${dino.species}</h2>
-                        <img src="images/${dino.species.toLowerCase()}.png">
-                        <p><b>Did you know?</b><br/>${randomFact}</p>
-                    </div>
+                newTile.innerHTML = `
+                    <h2>${dino.species}</h2>
+                    <img src="images/${dino.species.toLowerCase()}.png">
+                    <p><b>Did you know?</b><br/>${randomFact}</p>
                 `;
             } else if(dino.species.toLowerCase() == "pigeon"){
-                newTile = `
-                    <div id="${dino.species}" class="grid-item">
-                        <h2>${dino.species}</h2>
-                        <img src="images/${dino.species.toLowerCase()}.png">
-                        <p><b>Did you know?</b><br/>All birds are considered dinosaurs</p>
-                    </div>
+                newTile.innerHTML = `
+                    <h2>${dino.species}</h2>
+                    <img src="images/${dino.species.toLowerCase()}.png">
+                    <p><b>Did you know?</b><br/>All birds are considered dinosaurs</p>
                 `;
             } else {
-                newTile = `
-                    <div id="${dino.species}" class="grid-item">
-                        <h2>${dino.species}</h2>
-                        <img src="images/human.png">
-                    </div>
+                newTile.innerHTML = `
+                    <h2>${dino.species}</h2>
+                    <img src="images/human.png">
                 `;
             }
-            
-            
+                        
             // Add tiles to DOM
-            $('#grid').append(newTile);
+            document.querySelector('#grid').appendChild(newTile);
         });
     }
       
     // Remove form from screen
     function removeForm () {
-        $("#dino-compare").remove();
+        document.querySelector("#dino-compare").innerHTML = '';
     } 
 
 
